@@ -11,10 +11,17 @@ Vagrant.configure("2") do |config|
         gitlab.vm.provision "shell", inline: <<-SHELL
             
             #Gitlab Setup
-
-
-
             
+            sudo yum install -y curl policycoreutils-python openssh-server perl
+            sudo systemctl enable sshd
+            sudo systemctl start sshd
+            sudo firewall-cmd --permanent --add-service=http
+            sudo firewall-cmd --permanent --add-service=https
+            sudo systemctl reload firewalld
+
+            curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.rpm.sh | sudo bash
+            sudo EXTERNAL_URL="https://gitlab.example.com" yum install -y gitlab-ee
+
             # Setup DNS client with vagranting-dns
             ETH0=$(sudo nmcli connection show | grep eth0 | cut -d ' ' -f 4)
             ETH1=$(sudo nmcli connection show | grep eth1 | cut -d ' ' -f 4)
