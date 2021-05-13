@@ -16,10 +16,10 @@ Vagrant.configure("2") do |config|
             sudo firewall-cmd --permanent --add-service=http
             sudo firewall-cmd --permanent --add-service=https
             sudo firewall-cmd --reload
-            sudo -s
+            
             curl -s https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash
             sudo EXTERNAL_URL="https://gitlab.example.com" yum install -y gitlab-ce
-            exit
+            
 
             # Setup DNS client with vagranting-dns
             ETH0=$(sudo nmcli connection show | grep eth0 | cut -d ' ' -f 4)
