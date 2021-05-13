@@ -5,7 +5,6 @@ Vagrant.configure("2") do |config|
     config.vm.define "gitlab" do |gitlab|
         gitlab.vm.hostname = "gitlab.example.com"
         gitlab.vm.box = "generic/centos7"
-        gitlab.vm.network "forwarded_port", guest: 80, host:8080, host_ip: "127.0.0.1"
         gitlab.vm.network "private_network", ip: "10.10.10.12"
         gitlab.vm.synced_folder ".", "/vagrant", type: "rsync"
         gitlab.vm.provision "shell", inline: <<-SHELL
@@ -13,14 +12,14 @@ Vagrant.configure("2") do |config|
             #Gitlab Setup
             
             sudo yum install -y curl policycoreutils-python openssh-server perl
-            sudo systemctl enable sshd
-            sudo systemctl start sshd
+
             sudo firewall-cmd --permanent --add-service=http
             sudo firewall-cmd --permanent --add-service=https
-            sudo systemctl reload firewalld
-
-            curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.rpm.sh | sudo bash
-            sudo EXTERNAL_URL="https://gitlab.example.com" yum install -y gitlab-ee
+            sudo firewall-cmd --reload
+            sudo -s
+            curl -s https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash
+            sudo EXTERNAL_URL="https://gitlab.example.com" yum install -y gitlab-ce
+            exit
 
             # Setup DNS client with vagranting-dns
             ETH0=$(sudo nmcli connection show | grep eth0 | cut -d ' ' -f 4)
@@ -33,8 +32,8 @@ Vagrant.configure("2") do |config|
             sudo nmcli connection up $ETH0
         SHELL
         gitlab.vm.provider "virtualbox" do |vb|
-            vb.cpus = "1"
-            vb.memory = "1024"
+            vb.cpus = "2"
+            vb.memory = "2048"
             vb.customize ["modifyvm", :id, "--groups", "/vagranting"] #If you have problems with folder exist error -> Comment out this line
             vb.name = "gitlab"
         end
