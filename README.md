@@ -1,6 +1,6 @@
 vagranting-gitlab
 
-[quickLabs] Setup gitlab in VMs on your local workstation with Vagrant
+[quickLabs] Setup gitlab in VBOX VM on your local workstation with Vagrant
 Windows prerequsits
 
     Install Vagrant (download from https://www.vagrantup.com/ & simple next,next,next)
