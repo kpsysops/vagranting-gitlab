@@ -33,7 +33,7 @@ Vagrant.configure("2") do |config|
         SHELL
         gitlab.vm.provider "virtualbox" do |vb|
             vb.cpus = "2"
-            vb.memory = "2048"
+            vb.memory = "4096"
             vb.customize ["modifyvm", :id, "--groups", "/vagranting"] #If you have problems with folder exist error -> Comment out this line
             vb.name = "gitlab"
         end
